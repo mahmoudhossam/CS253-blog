@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block title %}
+Create New Post
+{% endblock %}
+
+{% block content %}
+<h1>New Post</h1>
+<form method="POST">
+    {% csrf_token %}
+    <table>
+        <tr>
+            <td>Title</td>
+            <td><input type="text" name="subject" value="{{subject}}"></td>
+        </tr>
+        <tr>
+            <td>Body</td>
+            <td><textarea name="content">{{ content }}</textarea></td>
+        </tr>
+    </table>
+    <div class="error">
+        {{ error }}
+    </div>
+    <input type="submit" value="submit">
+</form>
+{% endblock %}

@@ -1,0 +1,7 @@
+{% extends "base.html" %}
+{% block title %}Viewing "{{ post.subject }}"{% endblock %}
+{% block content %}
+<h1>{{ post.subject }}</h1>
+<hr>
+<p>{{ post.content }}</p>
+{% endblock %}

@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}Main Page{% endblock %}
+{% block content %}
+<h1>Current posts</h1>
+    {% for i in posts %}
+        <h3>{{ i.subject }}</h3>
+
+        <p>{{ i.content }}</p>
+        <hr>
+        {% empty %}
+            <p>Nothing to see here, move along.</p>
+    {% endfor %}
+
+{% endblock %}
