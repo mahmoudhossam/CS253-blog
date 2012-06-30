@@ -6,6 +6,7 @@ import views
 # admin.autodiscover()
 
 urlpatterns = patterns('',
+        url(r'^newpost$', views.newpost),
     # Examples:
     # url(r'^$', 'blog.views.home', name='home'),
     # url(r'^blog/', include('blog.foo.urls')),
