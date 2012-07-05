@@ -40,7 +40,7 @@ def signup(request):
     signup_template = 'signup.html'
 
     if request.method == "GET":
-        return render_template(signup_template)
+        return render_template(request, signup_template)
 
     elif request.method == "POST":
         usr = request.POST['username']
