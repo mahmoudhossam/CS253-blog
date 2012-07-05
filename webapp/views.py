@@ -17,7 +17,7 @@ def newpost(request):
         if subject and content:
             post = Post(subject=subject, content=content)
             post.save()
-            return redirect('post/' + str(post.id))
+            return redirect('post/%d' % post.id)
         else:
             error = "Please enter both the title and body."
             context = {
@@ -35,4 +35,50 @@ def post(request, post_id):
     post = Post.objects.get(id=post_id)
     context = {'post': post}
     return render_template(request, 'post.html', context=context)
+
+def signup(request):
+    signup_template = 'signup.html'
+
+    if request.method == "GET":
+        return render_template(signup_template)
+
+    elif request.method == "POST":
+        usr = request.POST['username']
+        pw = request.POST['password']
+        verify = request.POST['verify']
+        email = request.POST['email']
+        error_occurred = False
+        c = {
+                'usr': '',
+                'usr_val': '',
+                'email': '',
+                'email_val': '',
+                'pw': '',
+                'pw_val': '',
+                'verify': '',
+                'verify_val': ''}
+        if not valid_username(usr):
+            c['usr'] = "This username is invalid."
+            error_occurred = True
+        else:
+            c['usr_val'] = usr
+        if not valid_email(email) and not email.strip() == "":
+            c['email'] = "This email is invalid."
+            error_occurred = True
+        else:
+            c['email_val'] = email
+        if not valid_password(pw) :
+            c['pw'] = "This password is inavlid."
+            error_occurred = True
+        else:
+            c['pw_val'] = pw
+        if verify != pw:
+            c['verify'] = "These passwords do not match."
+            error_occurred = True
+        else:
+            c['verify_val'] = verify
+        if error_occurred:
+            return render_template(request, signup_template, context=c)
+        else:
+            return redirect('/thanks?usr=%s' % usr)
 
