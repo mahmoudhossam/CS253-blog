@@ -1,6 +1,8 @@
 from django.template.response import TemplateResponse
 from django.shortcuts import redirect
-from models import get_all_posts, Post
+from models import *
+from hashing import *
+from valid import *
 
 def render_template(request, template, context={}):
     template = TemplateResponse(request, template, context=context)
@@ -80,5 +82,20 @@ def signup(request):
         if error_occurred:
             return render_template(request, signup_template, context=c)
         else:
-            return redirect('/thanks?usr=%s' % usr)
+            hashed = hash_password(pw)
+            user = User(name=usr, hashed_pw=hashed[0], salt=hashed[1], email=email)
+            user.save()
+            r = redirect('/welcome')
+            r.set_cookie('userid', value='%s|%s' % (user.id, user.hashed_pw))
+            return r
 
+def welcome(request):
+    cookie = request.COOKIES['userid']
+    if cookie:
+        user_id, hashed_pw = cookie.split('|')
+        user = get_user(user_id)
+        if user.hashed_pw == hashed_pw:
+            c = {'user': user.name}
+            return render_template(request, 'welcome.html', context=c)
+    else:
+            return redirect('/signup')
