@@ -97,6 +97,5 @@ def welcome(request):
         if user.hashed_pw == cookie_hash:
             c = {'usr': user.username}
             return render_template(request, 'welcome.html', context=c)
-    else:
-            return redirect('/signup')
+    return redirect('/signup')
 
