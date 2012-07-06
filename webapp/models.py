@@ -1,7 +1,7 @@
 from django.db import models
 
 class User(models.Model):
-    name = models.CharField(max_length=30)
+    username = models.CharField(max_length=30)
     hashed_pw = models.CharField(max_length=100)
     salt = models.CharField(max_length=50)
     email = models.EmailField(blank=True)

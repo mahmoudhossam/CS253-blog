@@ -83,19 +83,20 @@ def signup(request):
             return render_template(request, signup_template, context=c)
         else:
             hashed = hash_password(pw)
-            user = User(name=usr, hashed_pw=hashed[0], salt=hashed[1], email=email)
+            user = User(username=usr, hashed_pw=hashed[0], salt=hashed[1], email=email)
             user.save()
             r = redirect('/welcome')
-            r.set_cookie('userid', value='%s|%s' % (user.id, user.hashed_pw))
+            r.set_cookie('userid', value='%s|%s' % (user.pk, user.hashed_pw))
             return r
 
 def welcome(request):
     cookie = request.COOKIES['userid']
     if cookie:
-        user_id, hashed_pw = cookie.split('|')
+        user_id, cookie_hash = cookie.split('|')
         user = get_user(user_id)
-        if user.hashed_pw == hashed_pw:
-            c = {'user': user.name}
+        if user.hashed_pw == cookie_hash:
+            c = {'usr': user.username}
             return render_template(request, 'welcome.html', context=c)
     else:
             return redirect('/signup')
+
