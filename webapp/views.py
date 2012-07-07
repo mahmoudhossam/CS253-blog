@@ -86,11 +86,11 @@ def signup(request):
             user = User(username=usr, hashed_pw=hashed[0], salt=hashed[1], email=email)
             user.save()
             r = redirect('/welcome')
-            r.set_cookie('userid', value='%s|%s' % (user.pk, user.hashed_pw))
+            r.set_cookie('name', value='%s|%s' % (user.pk, user.hashed_pw))
             return r
 
 def welcome(request):
-    cookie = request.COOKIES['userid']
+    cookie = request.COOKIES['name']
     if cookie:
         user_id, cookie_hash = cookie.split('|')
         user = get_user(user_id)
