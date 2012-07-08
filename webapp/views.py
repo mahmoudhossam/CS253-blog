@@ -118,3 +118,9 @@ def login(request):
             c = {'error': 'invalid login'}
             return render_template(request, 'login.html', context=c)
 
+
+def logout(request):
+    r = redirect('/signup')
+    r.delete_cookie('name')
+    return r
+

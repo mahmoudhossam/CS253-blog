@@ -12,6 +12,7 @@ urlpatterns = patterns('',
         url(r'^signup$', views.signup),
         url(r'^welcome$', views.welcome),
         url(r'^login$', views.login),
+        url(r'^logout$', views.logout),
     # Examples:
     # url(r'^$', 'blog.views.home', name='home'),
     # url(r'^blog/', include('blog.foo.urls')),
