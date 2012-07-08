@@ -3,6 +3,7 @@ from django.shortcuts import redirect
 from models import *
 from hashing import *
 from valid import *
+from users import *
 
 def render_template(request, template, context={}):
     template = TemplateResponse(request, template, context=context)
@@ -37,6 +38,11 @@ def post(request, post_id):
     post = Post.objects.get(id=post_id)
     context = {'post': post}
     return render_template(request, 'post.html', context=context)
+
+def successful_login(request, user):
+    r = redirect('/welcome')
+    r.set_cookie('name', value='%s|%s' % (user.pk, user.hashed_pw))
+    return r
 
 def signup(request):
     signup_template = 'signup.html'
@@ -85,17 +91,30 @@ def signup(request):
             hashed = hash_password(pw)
             user = User(username=usr, hashed_pw=hashed[0], salt=hashed[1], email=email)
             user.save()
-            r = redirect('/welcome')
-            r.set_cookie('name', value='%s|%s' % (user.pk, user.hashed_pw))
-            return r
+            return successful_login(request, user)            
 
 def welcome(request):
     cookie = request.COOKIES['name']
     if cookie:
         user_id, cookie_hash = cookie.split('|')
-        user = get_user(user_id)
-        if user.hashed_pw == cookie_hash:
+        user = get_user(userid=user_id)
+        if user and user.hashed_pw == cookie_hash:
             c = {'usr': user.username}
             return render_template(request, 'welcome.html', context=c)
     return redirect('/signup')
+
+def login(request):
+    if request.method == 'GET':
+        return render_template(request, 'login.html')
+    elif request.method == 'POST':
+        usr = request.POST['username']
+        pw = request.POST['password']
+        user = get_user(username=usr)
+        if user:
+            hashed = hash_password(pw, salt=user.salt)[0]
+            if hashed == user.hashed_pw:
+                return successful_login(request, user)
+        else:
+            c = {'error': 'invalid login'}
+            return render_template(request, 'login.html', context=c)
 

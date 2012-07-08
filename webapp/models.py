@@ -12,6 +12,3 @@ class Post(models.Model):
 
 def get_all_posts():
     return Post.objects.all()
-
-def get_user(user_id):
-    return User.objects.get(id=user_id)
