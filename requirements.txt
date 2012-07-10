@@ -4,4 +4,5 @@ distribute==0.6.24
 dj-database-url==0.2.1
 psycopg2==2.4.5
 py-bcrypt==0.2
+simplejson==2.6.0
 wsgiref==0.1.2
