@@ -1,9 +1,11 @@
-from django.template.response import TemplateResponse
+from django.template.response import TemplateResponse, HttpResponse
 from django.shortcuts import redirect
+from django.core import serializers
 from models import *
-from hashing import *
+from hashing import hash_password
 from valid import *
-from users import *
+from users import get_user
+from serialize import serialize_post
 
 def render_template(request, template, context={}):
     template = TemplateResponse(request, template, context=context)
@@ -124,3 +126,14 @@ def logout(request):
     r.delete_cookie('name')
     return r
 
+
+def post_json(request, post_id):
+    post = Post.objects.get(pk=post_id)
+    data = serialize_post(post)
+    return HttpResponse(data, mimetype="application/json")
+
+def all_json(request):
+    posts = Post.objects.all()
+    json_serializer = serializers.get_serializer("json")()
+    data = json_serializer.serialize(posts, ensure_ascii=False)
+    return HttpResponse(data, mimetype="application/json")
