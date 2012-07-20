@@ -1,6 +1,7 @@
 # Django settings for blog project.
 import dj_database_url
 import os
+from memcacheify import memcacheify
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
@@ -12,6 +13,8 @@ ADMINS = (
 MANAGERS = ADMINS
 
 DATABASES = {'default': dj_database_url.config()}
+
+CACHES = memcacheify()
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
