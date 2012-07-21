@@ -6,6 +6,11 @@ from hashing import hash_password
 from valid import *
 from users import get_user
 from serialize import serialize_post
+from time import time
+from django.core.cache import cache
+
+queried = None
+key = 'posts'
 
 def render_template(request, template, context={}):
     template = TemplateResponse(request, template, context=context)
@@ -22,6 +27,7 @@ def newpost(request):
         if subject and content:
             post = Post(subject=subject, content=content)
             post.save()
+            cache.clear()
             return redirect('post/%d' % post.id)
         else:
             error = "Please enter both the title and body."
@@ -32,8 +38,16 @@ def newpost(request):
             return render_template(request, 'newpost.html', context=context)
 
 def allposts(request):
-    posts = get_all_posts()
-    params = {'posts': posts}
+    global queried
+    if key in cache:
+        posts = cache.get(key)
+    else:
+        posts = get_all_posts()
+        queried = time()
+        cache.set(key, posts)
+
+    params = {key: posts,
+            'time': time() - queried}
     return render_template(request, 'home.html', context=params)
 
 def post(request, post_id):
