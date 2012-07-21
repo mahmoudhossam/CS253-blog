@@ -161,3 +161,7 @@ def all_json(request):
     json_serializer = serializers.get_serializer("json")()
     data = json_serializer.serialize(posts, ensure_ascii=False)
     return HttpResponse(data, mimetype="application/json")
+
+def flush_cache(request):
+    cache.clear()
+    return redirect('/')

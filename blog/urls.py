@@ -15,6 +15,7 @@ urlpatterns = patterns('',
         url(r'^login$', views.login),
         url(r'^logout$', views.logout),
         url(r'^.json$', views.all_json),
+        url(r'^flush$', views.flush_cache),
     # Examples:
     # url(r'^$', 'blog.views.home', name='home'),
     # url(r'^blog/', include('blog.foo.urls')),
