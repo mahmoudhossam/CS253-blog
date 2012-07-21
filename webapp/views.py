@@ -11,6 +11,8 @@ from django.core.cache import cache
 
 queried = None
 key = 'posts'
+post_key = 'post'
+post_queried = None
 
 def render_template(request, template, context={}):
     template = TemplateResponse(request, template, context=context)
@@ -51,8 +53,16 @@ def allposts(request):
     return render_template(request, 'home.html', context=params)
 
 def post(request, post_id):
-    post = Post.objects.get(id=post_id)
-    context = {'post': post}
+    global post_queried
+    if post_key in cache:
+        post = cache.get(post_key)
+    else:
+        post = Post.objects.get(id=post_id)
+        post_queried = time()
+        cache.set(post_key, post)
+
+    context = {'post': post,
+            'time': time() - post_queried}
     return render_template(request, 'post.html', context=context)
 
 def successful_login(request, user):
